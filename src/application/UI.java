@@ -1,6 +1,10 @@
 package application;
 
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 import chess.ChessPiece;
+import chess.ChessPosition;
 import chess.Color;
 
 public class UI {
@@ -26,31 +30,53 @@ public class UI {
 	public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
 	public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 	
-	public static void printBoard(ChessPiece[][] pieces) {
-		for (int i = 0; i < pieces.length; i++) {
-			System.out.print(pieces.length  - i + " ");
-			for (int j = 0; j < pieces.length; j++) {
-				printPiece(pieces[i][j]);
-			}
-			System.out.println();
+	
+	public static ChessPosition readChessPosition(Scanner sc) {
+		try {
+			String s = sc.nextLine();
+			char column = s.charAt(0);
+			int row = Integer.parseInt(s.substring(1));
+			
+			return new ChessPosition(column, row);
+		} catch (RuntimeException e) {
+			throw new InputMismatchException("Error reading Chess Position. Valid values are a1 to h8");
 		}
-		System.out.println("  a b c d e f g h");
-		
-		
 	}
 	
-	private static void printPiece(ChessPiece piece) {
+	
+	public static void printBoard(ChessPiece[][] pieces) {
+		String boardBorder = "  +---+---+---+---+---+---+---+---+";
+		
+		System.out.println(boardBorder);
+		for (int i = 0; i < pieces.length; i++) {
+			System.out.print(pieces.length  - i + " |");
+			for (int j = 0; j < pieces.length; j++) {
+				printPiece(pieces[i][j], ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)));
+			}
+			System.out.println();
+			System.out.println(boardBorder);
+		}
+		System.out.println("    a   b   c   d   e   f   g   h");
+	}
+	
+	private static void printPiece(ChessPiece piece, Boolean fillBackground) {
+		String printOut = ""; 
+		if (fillBackground)	{
+			printOut += ANSI_WHITE_BACKGROUND;
+		}
+		printOut += " ";
+		
 		if (piece == null) {
-			System.out.print("-");
+			printOut += ANSI_GREEN + "-";
 		} else {
             if (piece.getColor() == Color.WHITE) {
-                System.out.print(ANSI_WHITE + piece + ANSI_RESET);
+            	printOut += ANSI_RED + piece;
             }
             else {
-                System.out.print(ANSI_YELLOW + piece + ANSI_RESET);
+            	printOut += ANSI_BLUE + piece;
             }
 		}
-		System.out.print(" ");
+		System.out.print( printOut + " " + ANSI_RESET + "|");
 	}
 	
 	
