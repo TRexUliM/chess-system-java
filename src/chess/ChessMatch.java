@@ -32,6 +32,7 @@ public class ChessMatch {
 		Position source = sourcePosition.toPosition();
 		Position target = targetPosition.toPosition();
 		validateSourcePosition(source);
+		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
 		return (ChessPiece)capturedPiece;
 	}
@@ -52,21 +53,32 @@ public class ChessMatch {
 		}
 	}
 	
+	private void validateTargetPosition(Position source, Position target) {
+		if (!board.piece(source).PossibleMove(target)) {
+			throw new ChessException("(i) The chosen piece can't move to targe position.");
+		}
+	}
+	
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 	}
 	
 	private void initialSetup() {
 		
-		placeNewPiece('a', 8, new Rook(board, Color.BLACK));		
-		placeNewPiece('h', 8, new Rook(board, Color.BLACK));		
-		
+		placeNewPiece('d', 8, new Rook(board, Color.BLACK));
+		placeNewPiece('f', 8, new Rook(board, Color.BLACK));
+		placeNewPiece('d', 7, new Rook(board, Color.BLACK));
+		placeNewPiece('e', 7, new Rook(board, Color.BLACK));
+		placeNewPiece('f', 7, new Rook(board, Color.BLACK));
+
 		placeNewPiece('e', 8, new King(board, Color.BLACK));
 
+		placeNewPiece('d', 1, new Rook(board, Color.WHITE));
+		placeNewPiece('f', 1, new Rook(board, Color.WHITE));
+		placeNewPiece('d', 2, new Rook(board, Color.WHITE));
+		placeNewPiece('e', 2, new Rook(board, Color.WHITE));
+		placeNewPiece('f', 2, new Rook(board, Color.WHITE));
 
-		placeNewPiece('a', 1, new Rook(board, Color.WHITE));		
-		placeNewPiece('h', 1, new Rook(board, Color.WHITE));		
-		
 		placeNewPiece('e', 1, new King(board, Color.WHITE));
 
 	}
